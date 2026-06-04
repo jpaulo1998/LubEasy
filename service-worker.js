@@ -1,23 +1,24 @@
-const CACHE_NAME = 'lubeasy-v1';
+const CACHE_NAME = 'lubeasy-v2';
 const urlsToCache = [
-  '/lubeasy/',
-  '/lubeasy/index.html',
-  '/lubeasy/login.html',
-  '/lubeasy/consulta.html',
-  '/lubeasy/admin.html',
+  '/LubEasy/',
+  '/LubEasy/index.html',
+  '/LubEasy/login.html',
+  '/LubEasy/consulta.html',
+  '/LubEasy/admin.html',
+  '/LubEasy/icon.svg',
+  '/LubEasy/manifest.json',
   'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css'
 ];
 
-// INSTALAR E CACHEAR ARQUIVOS
 self.addEventListener('install', function(event) {
   event.waitUntil(
     caches.open(CACHE_NAME).then(function(cache) {
       return cache.addAll(urlsToCache);
     })
   );
+  self.skipWaiting();
 });
 
-// BUSCAR DO CACHE QUANDO OFFLINE
 self.addEventListener('fetch', function(event) {
   event.respondWith(
     caches.match(event.request).then(function(response) {
@@ -25,13 +26,12 @@ self.addEventListener('fetch', function(event) {
         return response;
       }
       return fetch(event.request).catch(function() {
-        return caches.match('/lubeasy/index.html');
+        return caches.match('/LubEasy/index.html');
       });
     })
   );
 });
 
-// ATUALIZAR CACHE
 self.addEventListener('activate', function(event) {
   event.waitUntil(
     caches.keys().then(function(cacheNames) {
@@ -44,4 +44,5 @@ self.addEventListener('activate', function(event) {
       );
     })
   );
+  self.clients.claim();
 });
