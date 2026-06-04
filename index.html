@@ -1,57 +1,168 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<!-- PWA -->
-<link rel="manifest" href="/LubEasy/manifest.json">
-<link rel="icon" href="/LubEasy/icon.svg" type="image/svg+xml">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LubEasy — Sistema de Lubrificação</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
 <meta name="theme-color" content="#2176c7">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="LubEasy">
-<title>LubEasy</title>
-<link rel="stylesheet" href="css/style.css" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI',sans-serif; }
+body {
+  background: linear-gradient(135deg, #0d2b4e, #1a4f8a);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  gap: 24px;
+}
+.logo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  color: #fff;
+  text-align: center;
+}
+.logo i {
+  font-size: 64px;
+  color: #f0c040;
+}
+.logo h1 {
+  font-size: 36px;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+.logo p {
+  font-size: 15px;
+  color: rgba(255,255,255,0.7);
+}
+.cards {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+  max-width: 700px;
+  width: 100%;
+}
+.card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 36px 32px;
+  flex: 1;
+  min-width: 240px;
+  max-width: 300px;
+  text-align: center;
+  text-decoration: none;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+}
+.card-icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+}
+.card-icon.azul { background: #e8f0fe; color: #2176c7; }
+.card-icon.verde { background: #e8f8f0; color: #1e8449; }
+.card h2 {
+  font-size: 20px;
+  color: #0d2b4e;
+  font-weight: 700;
+}
+.card p {
+  font-size: 14px;
+  color: #555;
+  line-height: 1.5;
+}
+.card-btn {
+  margin-top: 8px;
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+}
+.card-btn.azul { background: #2176c7; color: #fff; }
+.card-btn.verde { background: #1e8449; color: #fff; }
+footer {
+  color: rgba(255,255,255,0.5);
+  font-size: 13px;
+  text-align: center;
+}
+@media(max-width:520px) {
+  .cards { flex-direction: column; align-items: center; }
+  .card { max-width: 100%; }
+  .logo h1 { font-size: 28px; }
+}
+</style>
 </head>
 <body>
 
-  <div class="container-home">
+<!-- LOGO -->
+<div class="logo">
+  <i class="fa-solid fa-oil-can"></i>
+  <h1>LubEasy</h1>
+  <p>Sistema de Consulta de Lubrificação</p>
+</div>
 
-    <!-- LOGO / HEADER -->
-    <div class="home-header">
-      <i class="fa-solid fa-oil-can icon-logo"></i>
-      <h1>LubEasy</h1>
-      <p>Sistema de Consulta de Lubrificação</p>
+<!-- CARDS -->
+<div class="cards">
+
+  <a href="consulta.html" class="card">
+    <div class="card-icon azul">
+      <i class="fa-solid fa-magnifying-glass"></i>
     </div>
+    <h2>Consulta</h2>
+    <p>Consulte os lubrificantes recomendados para cada equipamento</p>
+    <span class="card-btn azul">
+      <i class="fa-solid fa-arrow-right"></i> Acessar
+    </span>
+  </a>
 
-    <!-- CARDS DE OPÇÃO -->
-    <div class="home-cards">
-
-      <!-- CONSULTA -->
-      <a href="consulta.html" class="card card-consulta">
-        <i class="fa-solid fa-magnifying-glass"></i>
-        <h2>Consulta</h2>
-        <p>Consulte os lubrificantes dos equipamentos</p>
-      </a>
-
-      <!-- ADMIN -->
-      <a href="login.html" class="card card-admin">
-        <i class="fa-solid fa-user-shield"></i>
-        <h2>Administrador</h2>
-        <p>Acesso restrito ao painel de gestão</p>
-      </a>
-
+  <a href="login.html" class="card">
+    <div class="card-icon verde">
+      <i class="fa-solid fa-user-shield"></i>
     </div>
+    <h2>Administrador</h2>
+    <p>Acesso restrito ao painel de gestão e cadastro de equipamentos</p>
+    <span class="card-btn verde">
+      <i class="fa-solid fa-lock"></i> Entrar
+    </span>
+  </a>
 
-    <!-- FOOTER -->
-    <footer>
-      <p>&copy; 2026 LubEasy — Todos os direitos reservados</p>
-    </footer>
+</div>
 
-  </div>
+<footer>
+  <p>&copy; 2026 LubEasy — Todos os direitos reservados</p>
+</footer>
+
 <script>
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function() {
-    navigator.serviceWorker.register('/LubEasy/service-worker.js')
+    navigator.serviceWorker.register('service-worker.js')
       .then(function(reg) {
         console.log('SW registrado!', reg);
       }).catch(function(err) {
@@ -60,5 +171,6 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
+
 </body>
 </html>
