@@ -1,404 +1,385 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<!-- PWA -->
-<link rel="manifest" href="/LubEasy/manifest.json">
-<link rel="icon" href="/LubEasy/icon.svg" type="image/svg+xml">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LubEasy — Admin</title>
+<link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#2176c7">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="LubEasy">
-<title>LubEasy — Painel Admin</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
 * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI',sans-serif; }
-body {
+body { background:#f0f4f8; min-height:100vh; }
+
+header {
   background: linear-gradient(135deg, #0d2b4e, #1a4f8a);
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px;
-  gap: 24px;
+  color:#fff;
+  padding: 16px 24px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
 }
-.topbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  max-width: 900px;
+header h1 { font-size:20px; font-weight:800; }
+.btn-sair {
+  background:rgba(255,255,255,0.15);
+  color:#fff;
+  border:none;
+  padding:8px 16px;
+  border-radius:8px;
+  cursor:pointer;
+  font-size:14px;
+  font-weight:600;
 }
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: #fff;
-  font-size: 22px;
-  font-weight: 700;
+.btn-sair:hover { background:rgba(255,255,255,0.25); }
+
+.container { max-width:900px; margin:0 auto; padding:24px 16px; }
+
+.form-card {
+  background:#fff;
+  border-radius:16px;
+  padding:24px;
+  box-shadow:0 2px 12px rgba(0,0,0,0.08);
+  margin-bottom:24px;
 }
-.btn-logout {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: #fff;
-  background: rgba(255,255,255,0.15);
-  border: none;
-  padding: 8px 16px;
-  border-radius: 8px;
-  font-size: 14px;
-  cursor: pointer;
-  text-decoration: none;
-}
-.btn-logout:hover { background: rgba(255,255,255,0.28); }
-.bem-vindo {
-  color: rgba(255,255,255,0.85);
-  font-size: 14px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-.painel {
-  background: #fff;
-  border-radius: 16px;
-  padding: 36px;
-  max-width: 900px;
-  width: 100%;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-}
-.painel h2 {
-  font-size: 20px;
-  color: #0d2b4e;
-  margin-bottom: 24px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  border-bottom: 2px solid #f0f4f8;
-  padding-bottom: 16px;
+.form-card h2 {
+  font-size:18px;
+  color:#0d2b4e;
+  margin-bottom:20px;
+  font-weight:700;
 }
 .form-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-  margin-bottom: 20px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px;
 }
-.grupo {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
+.form-group {
+  display:flex;
+  flex-direction:column;
+  gap:6px;
 }
-.grupo label {
-  font-size: 13px;
-  font-weight: 600;
-  color: #0d2b4e;
-  display: flex;
-  align-items: center;
-  gap: 6px;
+.form-group.full { grid-column:1/-1; }
+label { font-size:13px; font-weight:600; color:#444; }
+input, select, textarea {
+  padding:10px 14px;
+  border:1.5px solid #ddd;
+  border-radius:8px;
+  font-size:14px;
+  color:#333;
+  outline:none;
+  transition:border 0.2s;
+  font-family:'Segoe UI',sans-serif;
 }
-.grupo input {
-  padding: 10px 14px;
-  border: 2px solid #d0dce8;
-  border-radius: 8px;
-  font-size: 14px;
-  color: #0d2b4e;
-  background: #f0f4f8;
-  outline: none;
+input:focus, select:focus, textarea:focus { border-color:#2176c7; }
+textarea { resize:vertical; min-height:80px; }
+
+.btn-salvar {
+  margin-top:20px;
+  width:100%;
+  padding:14px;
+  background:#2176c7;
+  color:#fff;
+  border:none;
+  border-radius:10px;
+  font-size:16px;
+  font-weight:700;
+  cursor:pointer;
+  transition:background 0.2s;
 }
-.grupo input:focus { border-color: #2176c7; }
-.btn-add {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: #2176c7;
-  color: #fff;
-  border: none;
-  padding: 12px 24px;
-  border-radius: 8px;
-  font-size: 15px;
-  font-weight: 600;
-  cursor: pointer;
-  margin-top: 4px;
+.btn-salvar:hover { background:#1a5fa0; }
+.btn-salvar:disabled { background:#aaa; cursor:not-allowed; }
+
+.toast {
+  position:fixed;
+  bottom:24px;
+  left:50%;
+  transform:translateX(-50%);
+  background:#1e8449;
+  color:#fff;
+  padding:12px 28px;
+  border-radius:10px;
+  font-weight:600;
+  font-size:15px;
+  opacity:0;
+  transition:opacity 0.3s;
+  z-index:999;
+  pointer-events:none;
 }
-.btn-add:hover { background: #1a5fa3; }
-.msg-sucesso {
-  display: none;
-  align-items: center;
-  gap: 8px;
-  background: #eafaf1;
-  border: 1px solid #a9dfbf;
-  border-radius: 8px;
-  padding: 10px 14px;
-  color: #1e8449;
-  font-size: 14px;
-  margin-top: 16px;
+.toast.show { opacity:1; }
+.toast.erro { background:#c0392b; }
+
+.tabela-card {
+  background:#fff;
+  border-radius:16px;
+  padding:24px;
+  box-shadow:0 2px 12px rgba(0,0,0,0.08);
 }
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 24px;
+.tabela-card h2 {
+  font-size:18px;
+  color:#0d2b4e;
+  margin-bottom:16px;
+  font-weight:700;
 }
+.busca {
+  width:100%;
+  padding:10px 14px;
+  border:1.5px solid #ddd;
+  border-radius:8px;
+  font-size:14px;
+  margin-bottom:16px;
+  outline:none;
+}
+.busca:focus { border-color:#2176c7; }
+
+table { width:100%; border-collapse:collapse; font-size:14px; }
 th {
-  background: #f0f4f8;
-  color: #0d2b4e;
-  font-size: 13px;
-  padding: 10px 14px;
-  text-align: left;
-  font-weight: 600;
+  background:#0d2b4e;
+  color:#fff;
+  padding:12px 10px;
+  text-align:left;
+  font-weight:600;
 }
-td {
-  padding: 10px 14px;
-  font-size: 14px;
-  color: #333;
-  border-bottom: 1px solid #f0f4f8;
-}
-tr:hover td { background: #f8fbff; }
+th:first-child { border-radius:8px 0 0 0; }
+th:last-child { border-radius:0 8px 0 0; }
+td { padding:11px 10px; border-bottom:1px solid #f0f0f0; color:#333; }
+tr:hover td { background:#f8faff; }
 .btn-del {
-  background: none;
-  border: none;
-  color: #e74c3c;
-  cursor: pointer;
-  font-size: 16px;
-  padding: 4px 8px;
-  border-radius: 6px;
+  background:#fdecea;
+  color:#c0392b;
+  border:none;
+  padding:6px 12px;
+  border-radius:6px;
+  cursor:pointer;
+  font-size:13px;
+  font-weight:600;
 }
-.btn-del:hover { background: #fdecea; }
-.vazio {
-  text-align: center;
-  color: #999;
-  padding: 30px;
-  font-size: 14px;
+.btn-del:hover { background:#f5c6c6; }
+.vazio { text-align:center; color:#aaa; padding:32px; font-size:15px; }
+
+.loading {
+  text-align:center;
+  color:#888;
+  padding:24px;
+  font-size:15px;
 }
-.stats {
-  display: flex;
-  gap: 16px;
-  flex-wrap: wrap;
-  margin-bottom: 24px;
-}
-.stat-card {
-  background: #f0f4f8;
-  border-radius: 12px;
-  padding: 16px 24px;
-  flex: 1;
-  min-width: 120px;
-  text-align: center;
-}
-.stat-card i { font-size: 24px; color: #2176c7; margin-bottom: 8px; display: block; }
-.stat-card span { font-size: 28px; font-weight: 700; color: #0d2b4e; display: block; }
-.stat-card p { font-size: 12px; color: #555; margin-top: 4px; }
-footer {
-  color: rgba(255,255,255,0.5);
-  font-size: 13px;
-  text-align: center;
-  padding-bottom: 10px;
-}
+
 @media(max-width:600px) {
-  .form-grid { grid-template-columns: 1fr; }
-  .painel { padding: 20px 16px; }
+  .form-grid { grid-template-columns:1fr; }
+  table { font-size:12px; }
+  th, td { padding:8px 6px; }
 }
 </style>
 </head>
 <body>
 
-<!-- TOPBAR -->
-<div class="topbar">
-  <div class="logo">
-    <i class="fa-solid fa-oil-can"></i> LubEasy
-  </div>
-  <span class="bem-vindo">
-    <i class="fa-solid fa-user"></i>
-    <span id="nome-usuario">Admin</span>
-  </span>
-  <button class="btn-logout" onclick="fazerLogout()">
-    <i class="fa-solid fa-right-from-bracket"></i> Sair
-  </button>
-</div>
+<header>
+  <h1>🛢️ LubEasy — Admin</h1>
+  <button class="btn-sair" onclick="sair()">🚪 Sair</button>
+</header>
 
-<!-- PAINEL -->
-<div class="painel">
-
-  <!-- STATS -->
-  <div class="stats">
-    <div class="stat-card">
-      <i class="fa-solid fa-database"></i>
-      <span id="total-registros">0</span>
-      <p>Registros</p>
-    </div>
-    <div class="stat-card">
-      <i class="fa-solid fa-magnifying-glass"></i>
-      <span id="total-consultas">0</span>
-      <p>Consultas</p>
-    </div>
-  </div>
+<div class="container">
 
   <!-- FORMULÁRIO -->
-  <h2><i class="fa-solid fa-plus"></i> Adicionar Registro</h2>
-
-  <div class="form-grid">
-    <div class="grupo">
-      <label><i class="fa-solid fa-gears"></i> Equipamento</label>
-      <input type="text" id="inp-equipamento" placeholder="Ex: Trator John Deere">
+  <div class="form-card">
+    <h2>➕ Cadastrar Equipamento</h2>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Equipamento *</label>
+        <input type="text" id="equipamento" placeholder="Ex: Motor Elétrico">
+      </div>
+      <div class="form-group">
+        <label>Fabricante</label>
+        <input type="text" id="fabricante" placeholder="Ex: WEG">
+      </div>
+      <div class="form-group">
+        <label>Ponto de Lubrificação *</label>
+        <input type="text" id="ponto" placeholder="Ex: Rolamento dianteiro">
+      </div>
+      <div class="form-group">
+        <label>Lubrificante *</label>
+        <input type="text" id="lubrificante" placeholder="Ex: Grease MP NLGI 2">
+      </div>
+      <div class="form-group">
+        <label>Quantidade</label>
+        <input type="text" id="quantidade" placeholder="Ex: 20g">
+      </div>
+      <div class="form-group">
+        <label>Frequência</label>
+        <input type="text" id="frequencia" placeholder="Ex: A cada 3 meses">
+      </div>
+      <div class="form-group full">
+        <label>Observações</label>
+        <textarea id="observacoes" placeholder="Ex: Limpar o ponto antes de lubrificar"></textarea>
+      </div>
     </div>
-    <div class="grupo">
-      <label><i class="fa-solid fa-cog"></i> Componente</label>
-      <input type="text" id="inp-componente" placeholder="Ex: Motor">
-    </div>
-    <div class="grupo">
-      <label><i class="fa-solid fa-flask"></i> Óleo/Lubrificante</label>
-      <input type="text" id="inp-oleo" placeholder="Ex: Shell Rimula R4 15W40">
-    </div>
-    <div class="grupo">
-      <label><i class="fa-solid fa-fill-drip"></i> Capacidade</label>
-      <input type="text" id="inp-capacidade" placeholder="Ex: 12 Litros">
-    </div>
-  </div>
-
-  <button class="btn-add" onclick="adicionarRegistro()">
-    <i class="fa-solid fa-plus"></i> Adicionar
-  </button>
-
-  <div class="msg-sucesso" id="msg-sucesso">
-    <i class="fa-solid fa-circle-check"></i>
-    Registro adicionado com sucesso!
+    <button class="btn-salvar" id="btnSalvar" onclick="salvar()">💾 Salvar Equipamento</button>
   </div>
 
   <!-- TABELA -->
-  <h2 style="margin-top:32px;">
-    <i class="fa-solid fa-list"></i> Registros Cadastrados
-  </h2>
-
-  <table>
-    <thead>
-      <tr>
-        <th>Equipamento</th>
-        <th>Componente</th>
-        <th>Óleo</th>
-        <th>Capacidade</th>
-        <th>Ação</th>
-      </tr>
-    </thead>
-    <tbody id="tabela-body">
-      <tr><td colspan="5" class="vazio">Nenhum registro cadastrado.</td></tr>
-    </tbody>
-  </table>
+  <div class="tabela-card">
+    <h2>📋 Equipamentos Cadastrados</h2>
+    <input class="busca" type="text" id="busca" placeholder="🔍 Buscar equipamento..." oninput="filtrar()">
+    <div id="tabela-container">
+      <div class="loading">⏳ Carregando...</div>
+    </div>
+  </div>
 
 </div>
 
-<footer>&copy; 2026 LubEasy — Todos os direitos reservados</footer>
+<div class="toast" id="toast"></div>
 
-<script>
-// VERIFICAR SESSÃO
-function verificarSessao() {
-  const sessao = sessionStorage.getItem('lubeasy_sessao');
-  if (!sessao) {
-    window.location.href = 'login.html';
-    return null;
-  }
-  return JSON.parse(sessao);
-}
+<!-- FIREBASE -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, onSnapshot, orderBy, query } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-function fazerLogout() {
-  sessionStorage.removeItem('lubeasy_sessao');
+const firebaseConfig = {
+  apiKey: "AIzaSyCLBmCWxiV5n7cNg6NNQVkGKHmMmhY2yDM",
+  authDomain: "lubeasy-c75be.firebaseapp.com",
+  projectId: "lubeasy-c75be",
+  storageBucket: "lubeasy-c75be.firebasestorage.app",
+  messagingSenderId: "128335451883",
+  appId: "1:128335451883:web:a8f4ca7afee4ad900b90ae"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+let todosRegistros = [];
+
+// VERIFICAR LOGIN
+if (!sessionStorage.getItem('logado')) {
   window.location.href = 'login.html';
 }
 
-function getDados() {
-  const dados = localStorage.getItem('lubeasy_dados');
-  return dados ? JSON.parse(dados) : [];
-}
-
-function salvarDados(dados) {
-  localStorage.setItem('lubeasy_dados', JSON.stringify(dados));
-}
-
-function gerarId() {
-  return '_' + Math.random().toString(36).substr(2, 9);
-}
-
-function atualizarStats() {
-  const dados = getDados();
-  const consultas = parseInt(localStorage.getItem('lubeasy_consultas') || '0');
-  document.getElementById('total-registros').textContent = dados.length;
-  document.getElementById('total-consultas').textContent = consultas;
-}
-
-function renderTabela() {
-  const dados = getDados();
-  const tbody = document.getElementById('tabela-body');
-
-  if (dados.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="5" class="vazio">Nenhum registro cadastrado.</td></tr>';
-    return;
-  }
-
-  tbody.innerHTML = dados.map(d => `
-    <tr>
-      <td>${d.equipamento}</td>
-      <td>${d.componente}</td>
-      <td>${d.oleo}</td>
-      <td>${d.capacidade}</td>
-      <td>
-        <button class="btn-del" onclick="excluirRegistro('${d.id}')">
-          <i class="fa-solid fa-trash"></i>
-        </button>
-      </td>
-    </tr>
-  `).join('');
-}
-
-function adicionarRegistro() {
-  const equipamento = document.getElementById('inp-equipamento').value.trim();
-  const componente  = document.getElementById('inp-componente').value.trim();
-  const oleo        = document.getElementById('inp-oleo').value.trim();
-  const capacidade  = document.getElementById('inp-capacidade').value.trim();
-
-  if (!equipamento || !componente || !oleo || !capacidade) {
-    alert('Preencha todos os campos!');
-    return;
-  }
-
-  const dados = getDados();
-  dados.push({ id: gerarId(), equipamento, componente, oleo, capacidade });
-  salvarDados(dados);
-
-  document.getElementById('inp-equipamento').value = '';
-  document.getElementById('inp-componente').value  = '';
-  document.getElementById('inp-oleo').value        = '';
-  document.getElementById('inp-capacidade').value  = '';
-
-  const msg = document.getElementById('msg-sucesso');
-  msg.style.display = 'flex';
-  setTimeout(() => msg.style.display = 'none', 3000);
-
-  renderTabela();
-  atualizarStats();
-}
-
-function excluirRegistro(id) {
-  if (!confirm('Deseja excluir este registro?')) return;
-  const dados = getDados().filter(d => d.id !== id);
-  salvarDados(dados);
-  renderTabela();
-  atualizarStats();
-}
-
-// INICIAR
-const sessao = verificarSessao();
-if (sessao) {
-  document.getElementById('nome-usuario').textContent = sessao.usuario;
-  renderTabela();
-  atualizarStats();
-}
-</script>
-<script>
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', function() {
-    navigator.serviceWorker.register('/LubEasy/service-worker.js')
-      .then(function(reg) {
-        console.log('SW registrado!', reg);
-      }).catch(function(err) {
-        console.log('SW erro:', err);
-      });
+// CARREGAR DADOS EM TEMPO REAL
+const q = query(collection(db, "equipamentos"), orderBy("equipamento"));
+onSnapshot(q, (snapshot) => {
+  todosRegistros = [];
+  snapshot.forEach((doc) => {
+    todosRegistros.push({ id: doc.id, ...doc.data() });
   });
+  renderTabela(todosRegistros);
+});
+
+// SALVAR
+window.salvar = async function() {
+  const equipamento = document.getElementById('equipamento').value.trim();
+  const ponto = document.getElementById('ponto').value.trim();
+  const lubrificante = document.getElementById('lubrificante').value.trim();
+
+  if (!equipamento || !ponto || !lubrificante) {
+    mostrarToast('⚠️ Preencha os campos obrigatórios!', true);
+    return;
+  }
+
+  const btn = document.getElementById('btnSalvar');
+  btn.disabled = true;
+  btn.textContent = '⏳ Salvando...';
+
+  try {
+    await addDoc(collection(db, "equipamentos"), {
+      equipamento,
+      fabricante: document.getElementById('fabricante').value.trim(),
+      ponto,
+      lubrificante,
+      quantidade: document.getElementById('quantidade').value.trim(),
+      frequencia: document.getElementById('frequencia').value.trim(),
+      observacoes: document.getElementById('observacoes').value.trim(),
+      criadoEm: new Date().toISOString()
+    });
+
+    mostrarToast('✅ Equipamento salvo com sucesso!');
+    limparForm();
+  } catch (e) {
+    mostrarToast('❌ Erro ao salvar!', true);
+    console.error(e);
+  }
+
+  btn.disabled = false;
+  btn.textContent = '💾 Salvar Equipamento';
+}
+
+// DELETAR
+window.deletar = async function(id) {
+  if (!confirm('Deseja excluir este equipamento?')) return;
+  try {
+    await deleteDoc(doc(db, "equipamentos", id));
+    mostrarToast('🗑️ Excluído com sucesso!');
+  } catch(e) {
+    mostrarToast('❌ Erro ao excluir!', true);
+  }
+}
+
+// FILTRAR
+window.filtrar = function() {
+  const termo = document.getElementById('busca').value.toLowerCase();
+  const filtrados = todosRegistros.filter(r =>
+    r.equipamento.toLowerCase().includes(termo) ||
+    (r.ponto && r.ponto.toLowerCase().includes(termo)) ||
+    (r.lubrificante && r.lubrificante.toLowerCase().includes(termo))
+  );
+  renderTabela(filtrados);
+}
+
+// RENDERIZAR TABELA
+function renderTabela(registros) {
+  const container = document.getElementById('tabela-container');
+  if (registros.length === 0) {
+    container.innerHTML = '<div class="vazio">📭 Nenhum equipamento encontrado</div>';
+    return;
+  }
+  container.innerHTML = `
+    <div style="overflow-x:auto">
+      <table>
+        <thead>
+          <tr>
+            <th>Equipamento</th>
+            <th>Fabricante</th>
+            <th>Ponto</th>
+            <th>Lubrificante</th>
+            <th>Qtd</th>
+            <th>Frequência</th>
+            <th>Ação</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${registros.map(r => `
+            <tr>
+              <td>${r.equipamento}</td>
+              <td>${r.fabricante || '—'}</td>
+              <td>${r.ponto}</td>
+              <td>${r.lubrificante}</td>
+              <td>${r.quantidade || '—'}</td>
+              <td>${r.frequencia || '—'}</td>
+              <td><button class="btn-del" onclick="deletar('${r.id}')">🗑️</button></td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+
+// LIMPAR FORMULÁRIO
+function limparForm() {
+  ['equipamento','fabricante','ponto','lubrificante','quantidade','frequencia','observacoes']
+    .forEach(id => document.getElementById(id).value = '');
+}
+
+// TOAST
+function mostrarToast(msg, erro = false) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (erro ? ' erro' : '');
+  setTimeout(() => t.className = 'toast', 3000);
+}
+
+// SAIR
+window.sair = function() {
+  sessionStorage.removeItem('logado');
+  window.location.href = 'login.html';
 }
 </script>
+
 </body>
 </html>
