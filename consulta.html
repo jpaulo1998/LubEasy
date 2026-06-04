@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LubEasy — Consulta</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI',sans-serif; }
+body {
+  background: linear-gradient(135deg, #0d2b4e, #1a4f8a);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  gap: 24px;
+}
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 700px;
+}
+.btn-voltar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #fff;
+  text-decoration: none;
+  font-size: 14px;
+  background: rgba(255,255,255,0.15);
+  padding: 8px 16px;
+  border-radius: 8px;
+}
+.btn-voltar:hover { background: rgba(255,255,255,0.28); }
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #fff;
+  font-size: 22px;
+  font-weight: 700;
+}
+.box {
+  background: #fff;
+  border-radius: 16px;
+  padding: 36px;
+  max-width: 700px;
+  width: 100%;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+.box h2 {
+  font-size: 20px;
+  color: #0d2b4e;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.sub {
+  color: #555;
+  font-size: 14px;
+  margin-bottom: 28px;
+  line-height: 1.6;
+}
+.grupo {
+  margin-bottom: 20px;
+}
+.grupo label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #0d2b4e;
+  margin-bottom: 8px;
+}
+.grupo select {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #d0dce8;
+  border-radius: 10px;
+  font-size: 15px;
+  color: #0d2b4e;
+  background: #f0f4f8;
+  outline: none;
+  cursor: pointer;
+}
+.grupo select:focus { border-color: #2176c7; }
+.grupo select:disabled { opacity: 0.5; cursor: not-allowed; }
+.resultado {
+  display: none;
+  background: #f0f4f8;
+  border: 2px solid #2176c7;
+  border-radius: 12px;
+  padding: 24px;
+  margin-top: 24px;
+  animation: fadeIn 0.4s ease;
+}
+.resultado h3 {
+  font-size: 16px;
+  color: #1a4f8a;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.resultado-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.resultado-item { display: flex; flex-direction: column; gap: 4px; }
+.resultado-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #555;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.resultado-valor {
+  font-size: 16px;
+  font-weight: 700;
+  color: #0d2b4e;
+}
+.sem-dados {
+  display: none;
+  text-align: center;
+  padding: 30px;
+  color: #e67e22;
+  margin-top: 24px;
+}
+.sem-dados i { font-size: 36px; margin-bottom: 10px; display: block; }
+footer {
+  color: rgba(255,255,255,0.5);
+  font-size: 13px;
+  text-align: center;
+}
+@keyframes fadeIn {
+  from { opacity:0; transform:translateY(10px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+@media(max-width:520px) {
+  .resultado-grid { grid-template-columns: 1fr; }
+  .box { padding: 24px 16px; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <a href="index.html" class="btn-voltar">
+    <i class="fa-solid fa-arrow-left"></i> Voltar
+  </a>
+  <div class="logo">
+    <i class="fa-solid fa-oil-can"></i> LubEasy
+  </div>
+  <span></span>
+</div>
+
+<div class="box">
+  <h2><i class="fa-solid fa-magnifying-glass"></i> Consulta de Lubrificantes</h2>
+  <p class="sub">Selecione o equipamento e o componente para ver o lubrificante recomendado.</p>
+
+  <div class="grupo">
+    <label for="sel-equipamento">
+      <i class="fa-solid fa-gears"></i> Equipamento
+    </label>
+    <select id="sel-equipamento" onchange="carregarComponentes()">
+      <option value="">— Selecione o Equipamento —</option>
+    </select>
+  </div>
+
+  <div class="grupo">
+    <label for="sel-componente">
+      <i class="fa-solid fa-cog"></i> Componente
+    </label>
+    <select id="sel-componente" onchange="mostrarResultado()" disabled>
+      <option value="">— Selecione o Componente —</option>
+    </select>
+  </div>
+
+  <div class="resultado" id="resultado-box">
+    <h3><i class="fa-solid fa-circle-check"></i> Lubrificante Recomendado</h3>
+    <div class="resultado-grid">
+      <div class="resultado-item">
+        <span class="resultado-label"><i class="fa-solid fa-gears"></i> Equipamento</span>
+        <span class="resultado-valor" id="res-equipamento">—</span>
+      </div>
+      <div class="resultado-item">
+        <span class="resultado-label"><i class="fa-solid fa-cog"></i> Componente</span>
+        <span class="resultado-valor" id="res-componente">—</span>
+      </div>
+      <div class="resultado-item">
+        <span class="resultado-label"><i class="fa-solid fa-flask"></i> Óleo/Lubrificante</span>
+        <span class="resultado-valor" id="res-oleo">—</span>
+      </div>
+      <div class="resultado-item">
+        <span class="resultado-label"><i class="fa-solid fa-fill-drip"></i> Capacidade</span>
+        <span class="resultado-valor" id="res-capacidade">—</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="sem-dados" id="sem-dados">
+    <i class="fa-solid fa-triangle-exclamation"></i>
+    <p>Nenhum dado encontrado para esta seleção.</p>
+  </div>
+
+</div>
+
+<footer>&copy; 2026 LubEasy — Todos os direitos reservados</footer>
+
+<script>
+function getDados() {
+  const dados = localStorage.getItem('lubeasy_dados');
+  return dados ? JSON.parse(dados) : [];
+}
+
+function registrarConsulta() {
+  let total = parseInt(localStorage.getItem('lubeasy_consultas') || '0');
+  total++;
+  localStorage.setItem('lubeasy_consultas', total.toString());
+}
+
+function carregarEquipamentos() {
+  const dados = getDados();
+  const sel = document.getElementById('sel-equipamento');
+  const equipamentos = [...new Set(dados.map(d => d.equipamento))];
+  sel.innerHTML = '<option value="">— Selecione o Equipamento —</option>';
+  equipamentos.forEach(eq => {
+    const opt = document.createElement('option');
+    opt.value = eq;
+    opt.textContent = eq;
+    sel.appendChild(opt);
+  });
+}
+
+function carregarComponentes() {
+  const dados = getDados();
+  const selEq = document.getElementById('sel-equipamento');
+  const selComp = document.getElementById('sel-componente');
+  const resultado = document.getElementById('resultado-box');
+  const semDados = document.getElementById('sem-dados');
+
+  resultado.style.display = 'none';
+  semDados.style.display = 'none';
+
+  const equipSelecionado = selEq.value;
+
+  if (!equipSelecionado) {
+    selComp.innerHTML = '<option value="">— Selecione o Componente —</option>';
+    selComp.disabled = true;
+    return;
+  }
+
+  const componentes = dados
+    .filter(d => d.equipamento === equipSelecionado)
+    .map(d => d.componente);
+
+  selComp.innerHTML = '<option value="">— Selecione o Componente —</option>';
+  componentes.forEach(comp => {
+    const opt = document.createElement('option');
+    opt.value = comp;
+    opt.textContent = comp;
+    selComp.appendChild(opt);
+  });
+
+  selComp.disabled = false;
+}
+
+function mostrarResultado() {
+  const dados = getDados();
+  const selEq = document.getElementById('sel-equipamento');
+  const selComp = document.getElementById('sel-componente');
+  const resultado = document.getElementById('resultado-box');
+  const semDados = document.getElementById('sem-dados');
+
+  const equipSelecionado = selEq.value;
+  const compSelecionado = selComp.value;
+
+  if (!compSelecionado) {
+    resultado.style.display = 'none';
+    semDados.style.display = 'none';
+    return;
+  }
+
+  const registro = dados.find(
+    d => d.equipamento === equipSelecionado && d.componente === compSelecionado
+  );
+
+  if (registro) {
+    document.getElementById('res-equipamento').textContent = registro.equipamento;
+    document.getElementById('res-componente').textContent = registro.componente;
+    document.getElementById('res-oleo').textContent = registro.oleo;
+    document.getElementById('res-capacidade').textContent = registro.capacidade;
+    resultado.style.display = 'block';
+    semDados.style.display = 'none';
+    registrarConsulta();
+  } else {
+    resultado.style.display = 'none';
+    semDados.style.display = 'block';
+  }
+}
+
+carregarEquipamentos();
+</script>
+
+</body>
+</html>
