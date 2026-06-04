@@ -1,331 +1,226 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<!-- PWA -->
-<link rel="manifest" href="/LubEasy/manifest.json">
-<link rel="icon" href="/LubEasy/icon.svg" type="image/svg+xml">
-<meta name="theme-color" content="#2176c7">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="LubEasy">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>LubEasy — Consulta</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#2176c7">
 <style>
 * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI',sans-serif; }
-body {
+body { background:#f0f4f8; min-height:100vh; }
+
+header {
   background: linear-gradient(135deg, #0d2b4e, #1a4f8a);
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px;
-  gap: 24px;
+  color:#fff;
+  padding:16px 24px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
 }
-.header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  max-width: 700px;
-}
+header h1 { font-size:20px; font-weight:800; }
 .btn-voltar {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: #fff;
-  text-decoration: none;
-  font-size: 14px;
-  background: rgba(255,255,255,0.15);
-  padding: 8px 16px;
-  border-radius: 8px;
+  background:rgba(255,255,255,0.15);
+  color:#fff;
+  border:none;
+  padding:8px 16px;
+  border-radius:8px;
+  cursor:pointer;
+  font-size:14px;
+  font-weight:600;
+  text-decoration:none;
 }
-.btn-voltar:hover { background: rgba(255,255,255,0.28); }
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: #fff;
-  font-size: 22px;
-  font-weight: 700;
+
+.container { max-width:960px; margin:0 auto; padding:24px 16px; }
+
+.busca-card {
+  background:#fff;
+  border-radius:16px;
+  padding:20px 24px;
+  box-shadow:0 2px 12px rgba(0,0,0,0.08);
+  margin-bottom:24px;
 }
-.box {
-  background: #fff;
-  border-radius: 16px;
-  padding: 36px;
-  max-width: 700px;
-  width: 100%;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+.busca-card input {
+  width:100%;
+  padding:12px 16px;
+  border:1.5px solid #ddd;
+  border-radius:10px;
+  font-size:15px;
+  outline:none;
 }
-.box h2 {
-  font-size: 20px;
-  color: #0d2b4e;
-  margin-bottom: 8px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
+.busca-card input:focus { border-color:#2176c7; }
+
+.resultado-card {
+  background:#fff;
+  border-radius:16px;
+  padding:24px;
+  box-shadow:0 2px 12px rgba(0,0,0,0.08);
 }
-.sub {
-  color: #555;
-  font-size: 14px;
-  margin-bottom: 28px;
-  line-height: 1.6;
+.resultado-card h2 {
+  font-size:18px;
+  color:#0d2b4e;
+  margin-bottom:16px;
+  font-weight:700;
 }
-.grupo {
-  margin-bottom: 20px;
+
+.cards-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(280px, 1fr));
+  gap:16px;
 }
-.grupo label {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 14px;
-  font-weight: 600;
-  color: #0d2b4e;
-  margin-bottom: 8px;
+
+.equip-card {
+  background:#f8faff;
+  border:1.5px solid #e0e8f5;
+  border-radius:12px;
+  padding:18px;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
 }
-.grupo select {
-  width: 100%;
-  padding: 12px 16px;
-  border: 2px solid #d0dce8;
-  border-radius: 10px;
-  font-size: 15px;
-  color: #0d2b4e;
-  background: #f0f4f8;
-  outline: none;
-  cursor: pointer;
+.equip-card h3 {
+  font-size:16px;
+  color:#0d2b4e;
+  font-weight:700;
 }
-.grupo select:focus { border-color: #2176c7; }
-.grupo select:disabled { opacity: 0.5; cursor: not-allowed; }
-.resultado {
-  display: none;
-  background: #f0f4f8;
-  border: 2px solid #2176c7;
-  border-radius: 12px;
-  padding: 24px;
-  margin-top: 24px;
-  animation: fadeIn 0.4s ease;
+.equip-card .badge {
+  display:inline-block;
+  background:#e8f0fe;
+  color:#2176c7;
+  padding:3px 10px;
+  border-radius:20px;
+  font-size:12px;
+  font-weight:600;
+  width:fit-content;
 }
-.resultado h3 {
-  font-size: 16px;
-  color: #1a4f8a;
-  margin-bottom: 20px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
+.equip-card .linha {
+  display:flex;
+  gap:8px;
+  font-size:13px;
+  color:#555;
+  align-items:flex-start;
 }
-.resultado-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
+.equip-card .linha strong {
+  color:#333;
+  min-width:90px;
+  font-weight:600;
 }
-.resultado-item { display: flex; flex-direction: column; gap: 4px; }
-.resultado-label {
-  font-size: 12px;
-  font-weight: 600;
-  color: #555;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
+.vazio {
+  text-align:center;
+  color:#aaa;
+  padding:40px;
+  font-size:15px;
 }
-.resultado-valor {
-  font-size: 16px;
-  font-weight: 700;
-  color: #0d2b4e;
+.loading {
+  text-align:center;
+  color:#888;
+  padding:32px;
+  font-size:15px;
 }
-.sem-dados {
-  display: none;
-  text-align: center;
-  padding: 30px;
-  color: #e67e22;
-  margin-top: 24px;
+.contador {
+  font-size:13px;
+  color:#888;
+  margin-bottom:16px;
 }
-.sem-dados i { font-size: 36px; margin-bottom: 10px; display: block; }
-footer {
-  color: rgba(255,255,255,0.5);
-  font-size: 13px;
-  text-align: center;
-}
-@keyframes fadeIn {
-  from { opacity:0; transform:translateY(10px); }
-  to   { opacity:1; transform:translateY(0); }
-}
-@media(max-width:520px) {
-  .resultado-grid { grid-template-columns: 1fr; }
-  .box { padding: 24px 16px; }
+
+@media(max-width:560px) {
+  .cards-grid { grid-template-columns:1fr; }
 }
 </style>
 </head>
 <body>
 
-<div class="header">
-  <a href="index.html" class="btn-voltar">
-    <i class="fa-solid fa-arrow-left"></i> Voltar
-  </a>
-  <div class="logo">
-    <i class="fa-solid fa-oil-can"></i> LubEasy
-  </div>
-  <span></span>
-</div>
+<header>
+  <h1>🔍 LubEasy — Consulta</h1>
+  <a href="index.html" class="btn-voltar">🏠 Início</a>
+</header>
 
-<div class="box">
-  <h2><i class="fa-solid fa-magnifying-glass"></i> Consulta de Lubrificantes</h2>
-  <p class="sub">Selecione o equipamento e o componente para ver o lubrificante recomendado.</p>
+<div class="container">
 
-  <div class="grupo">
-    <label for="sel-equipamento">
-      <i class="fa-solid fa-gears"></i> Equipamento
-    </label>
-    <select id="sel-equipamento" onchange="carregarComponentes()">
-      <option value="">— Selecione o Equipamento —</option>
-    </select>
+  <div class="busca-card">
+    <input type="text" id="busca" placeholder="🔍 Buscar por equipamento, ponto ou lubrificante..." oninput="filtrar()">
   </div>
 
-  <div class="grupo">
-    <label for="sel-componente">
-      <i class="fa-solid fa-cog"></i> Componente
-    </label>
-    <select id="sel-componente" onchange="mostrarResultado()" disabled>
-      <option value="">— Selecione o Componente —</option>
-    </select>
-  </div>
-
-  <div class="resultado" id="resultado-box">
-    <h3><i class="fa-solid fa-circle-check"></i> Lubrificante Recomendado</h3>
-    <div class="resultado-grid">
-      <div class="resultado-item">
-        <span class="resultado-label"><i class="fa-solid fa-gears"></i> Equipamento</span>
-        <span class="resultado-valor" id="res-equipamento">—</span>
-      </div>
-      <div class="resultado-item">
-        <span class="resultado-label"><i class="fa-solid fa-cog"></i> Componente</span>
-        <span class="resultado-valor" id="res-componente">—</span>
-      </div>
-      <div class="resultado-item">
-        <span class="resultado-label"><i class="fa-solid fa-flask"></i> Óleo/Lubrificante</span>
-        <span class="resultado-valor" id="res-oleo">—</span>
-      </div>
-      <div class="resultado-item">
-        <span class="resultado-label"><i class="fa-solid fa-fill-drip"></i> Capacidade</span>
-        <span class="resultado-valor" id="res-capacidade">—</span>
-      </div>
+  <div class="resultado-card">
+    <h2>📋 Equipamentos</h2>
+    <div class="contador" id="contador"></div>
+    <div id="resultado">
+      <div class="loading">⏳ Carregando equipamentos...</div>
     </div>
   </div>
 
-  <div class="sem-dados" id="sem-dados">
-    <i class="fa-solid fa-triangle-exclamation"></i>
-    <p>Nenhum dado encontrado para esta seleção.</p>
-  </div>
-
 </div>
 
-<footer>&copy; 2026 LubEasy — Todos os direitos reservados</footer>
+<!-- FIREBASE -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, onSnapshot, orderBy, query } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-<script>
-function getDados() {
-  const dados = localStorage.getItem('lubeasy_dados');
-  return dados ? JSON.parse(dados) : [];
-}
+const firebaseConfig = {
+  apiKey: "AIzaSyCLBmCWxiV5n7cNg6NNQVkGKHmMmhY2yDM",
+  authDomain: "lubeasy-c75be.firebaseapp.com",
+  projectId: "lubeasy-c75be",
+  storageBucket: "lubeasy-c75be.firebasestorage.app",
+  messagingSenderId: "128335451883",
+  appId: "1:128335451883:web:a8f4ca7afee4ad900b90ae"
+};
 
-function registrarConsulta() {
-  let total = parseInt(localStorage.getItem('lubeasy_consultas') || '0');
-  total++;
-  localStorage.setItem('lubeasy_consultas', total.toString());
-}
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-function carregarEquipamentos() {
-  const dados = getDados();
-  const sel = document.getElementById('sel-equipamento');
-  const equipamentos = [...new Set(dados.map(d => d.equipamento))];
-  sel.innerHTML = '<option value="">— Selecione o Equipamento —</option>';
-  equipamentos.forEach(eq => {
-    const opt = document.createElement('option');
-    opt.value = eq;
-    opt.textContent = eq;
-    sel.appendChild(opt);
+let todosRegistros = [];
+
+// CARREGAR DADOS EM TEMPO REAL
+const q = query(collection(db, "equipamentos"), orderBy("equipamento"));
+onSnapshot(q, (snapshot) => {
+  todosRegistros = [];
+  snapshot.forEach((doc) => {
+    todosRegistros.push({ id: doc.id, ...doc.data() });
   });
-}
+  renderCards(todosRegistros);
+});
 
-function carregarComponentes() {
-  const dados = getDados();
-  const selEq = document.getElementById('sel-equipamento');
-  const selComp = document.getElementById('sel-componente');
-  const resultado = document.getElementById('resultado-box');
-  const semDados = document.getElementById('sem-dados');
-
-  resultado.style.display = 'none';
-  semDados.style.display = 'none';
-
-  const equipSelecionado = selEq.value;
-
-  if (!equipSelecionado) {
-    selComp.innerHTML = '<option value="">— Selecione o Componente —</option>';
-    selComp.disabled = true;
-    return;
-  }
-
-  const componentes = dados
-    .filter(d => d.equipamento === equipSelecionado)
-    .map(d => d.componente);
-
-  selComp.innerHTML = '<option value="">— Selecione o Componente —</option>';
-  componentes.forEach(comp => {
-    const opt = document.createElement('option');
-    opt.value = comp;
-    opt.textContent = comp;
-    selComp.appendChild(opt);
-  });
-
-  selComp.disabled = false;
-}
-
-function mostrarResultado() {
-  const dados = getDados();
-  const selEq = document.getElementById('sel-equipamento');
-  const selComp = document.getElementById('sel-componente');
-  const resultado = document.getElementById('resultado-box');
-  const semDados = document.getElementById('sem-dados');
-
-  const equipSelecionado = selEq.value;
-  const compSelecionado = selComp.value;
-
-  if (!compSelecionado) {
-    resultado.style.display = 'none';
-    semDados.style.display = 'none';
-    return;
-  }
-
-  const registro = dados.find(
-    d => d.equipamento === equipSelecionado && d.componente === compSelecionado
+// FILTRAR
+window.filtrar = function() {
+  const termo = document.getElementById('busca').value.toLowerCase();
+  const filtrados = todosRegistros.filter(r =>
+    r.equipamento.toLowerCase().includes(termo) ||
+    (r.ponto && r.ponto.toLowerCase().includes(termo)) ||
+    (r.lubrificante && r.lubrificante.toLowerCase().includes(termo)) ||
+    (r.fabricante && r.fabricante.toLowerCase().includes(termo))
   );
+  renderCards(filtrados);
+}
 
-  if (registro) {
-    document.getElementById('res-equipamento').textContent = registro.equipamento;
-    document.getElementById('res-componente').textContent = registro.componente;
-    document.getElementById('res-oleo').textContent = registro.oleo;
-    document.getElementById('res-capacidade').textContent = registro.capacidade;
-    resultado.style.display = 'block';
-    semDados.style.display = 'none';
-    registrarConsulta();
-  } else {
-    resultado.style.display = 'none';
-    semDados.style.display = 'block';
+// RENDERIZAR CARDS
+function renderCards(registros) {
+  const container = document.getElementById('resultado');
+  const contador = document.getElementById('contador');
+
+  contador.textContent = `${registros.length} equipamento(s) encontrado(s)`;
+
+  if (registros.length === 0) {
+    container.innerHTML = '<div class="vazio">📭 Nenhum equipamento encontrado</div>';
+    return;
   }
-}
 
-carregarEquipamentos();
-</script>
-<script>
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', function() {
-    navigator.serviceWorker.register('/LubEasy/service-worker.js')
-      .then(function(reg) {
-        console.log('SW registrado!', reg);
-      }).catch(function(err) {
-        console.log('SW erro:', err);
-      });
-  });
+  container.innerHTML = `
+    <div class="cards-grid">
+      ${registros.map(r => `
+        <div class="equip-card">
+          <h3>⚙️ ${r.equipamento}</h3>
+          ${r.fabricante ? `<span class="badge">🏭 ${r.fabricante}</span>` : ''}
+          <div class="linha"><strong>📍 Ponto:</strong> ${r.ponto}</div>
+          <div class="linha"><strong>🛢️ Lubrificante:</strong> ${r.lubrificante}</div>
+          ${r.quantidade ? `<div class="linha"><strong>⚖️ Quantidade:</strong> ${r.quantidade}</div>` : ''}
+          ${r.frequencia ? `<div class="linha"><strong>🗓️ Frequência:</strong> ${r.frequencia}</div>` : ''}
+          ${r.observacoes ? `<div class="linha"><strong>📝 Obs:</strong> ${r.observacoes}</div>` : ''}
+        </div>
+      `).join('')}
+    </div>
+  `;
 }
 </script>
+
 </body>
 </html>
