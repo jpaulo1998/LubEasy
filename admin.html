@@ -55,7 +55,7 @@ header h1 { font-size:20px; font-weight:800; }
 .form-group { display:flex; flex-direction:column; gap:6px; }
 .form-group.full { grid-column:1/-1; }
 label { font-size:13px; font-weight:600; color:#444; }
-input, select, textarea {
+input, textarea {
   padding:10px 14px;
   border:1.5px solid #ddd;
   border-radius:8px;
@@ -65,7 +65,7 @@ input, select, textarea {
   transition:border 0.2s;
   font-family:'Segoe UI',sans-serif;
 }
-input:focus, select:focus, textarea:focus { border-color:#2176c7; }
+input:focus, textarea:focus { border-color:#2176c7; }
 textarea { resize:vertical; min-height:80px; }
 
 .btn-salvar {
@@ -198,7 +198,8 @@ tr:hover td { background:#f8faff; }
       </div>
       <div class="form-group full">
         <label>Observações</label>
-        <textarea id="observacoes" placeholder="Ex: Limpar o ponto antes de lubrificar"></textarea>
+        <textarea id="observacoes"
+          placeholder="Ex: Limpar o ponto antes de lubrificar"></textarea>
       </div>
     </div>
     <button class="btn-salvar" id="btnSalvar" onclick="salvar()">
@@ -220,13 +221,13 @@ tr:hover td { background:#f8faff; }
 <div class="toast" id="toast"></div>
 
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { initializeApp } from
+  "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import {
   getFirestore, collection, addDoc, deleteDoc,
   doc, onSnapshot, orderBy, query
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-// ✅ SUAS CREDENCIAIS FIREBASE
 const firebaseConfig = {
   apiKey: "AIzaSyCLBmCWxiV5n7cNg6NNQVkGKHmMmhY2yDM",
   authDomain: "lubeasy-c75be.firebaseapp.com",
@@ -277,19 +278,19 @@ window.salvar = async function() {
   try {
     await addDoc(collection(db, "equipamentos"), {
       equipamento,
-      fabricante:   document.getElementById('fabricante').value.trim(),
+      fabricante:  document.getElementById('fabricante').value.trim(),
       ponto,
       lubrificante,
-      quantidade:   document.getElementById('quantidade').value.trim(),
-      frequencia:   document.getElementById('frequencia').value.trim(),
-      observacoes:  document.getElementById('observacoes').value.trim(),
-      criadoEm:     new Date().toISOString()
+      quantidade:  document.getElementById('quantidade').value.trim(),
+      frequencia:  document.getElementById('frequencia').value.trim(),
+      observacoes: document.getElementById('observacoes').value.trim(),
+      criadoEm:    new Date().toISOString()
     });
     mostrarToast('✅ Equipamento salvo com sucesso!');
     limparForm();
   } catch(e) {
     console.error("Erro ao salvar:", e);
-    mostrarToast('❌ Erro ao salvar: ' + e.message, true);
+    mostrarToast('❌ Erro: ' + e.message, true);
   }
 
   btn.disabled = false;
