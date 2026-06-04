@@ -1,0 +1,22 @@
+{
+  "name": "LubEasy",
+  "short_name": "LubEasy",
+  "description": "Sistema de Consulta de Lubrificação",
+  "start_url": "/lubeasy/index.html",
+  "display": "standalone",
+  "background_color": "#0d2b4e",
+  "theme_color": "#2176c7",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/2534/2534988.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/2534/2534988.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
