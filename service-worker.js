@@ -1,13 +1,12 @@
-const CACHE_NAME = 'lubeasy-v2';
+const CACHE_NAME = 'lubeasy-v3';
 const urlsToCache = [
-  '/LubEasy/',
-  '/LubEasy/index.html',
-  '/LubEasy/login.html',
-  '/LubEasy/consulta.html',
-  '/LubEasy/admin.html',
-  '/LubEasy/icon.svg',
-  '/LubEasy/manifest.json',
-  'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css'
+  '/lubeasy/',
+  '/lubeasy/index.html',
+  '/lubeasy/login.html',
+  '/lubeasy/consulta.html',
+  '/lubeasy/admin.html',
+  '/lubeasy/icon.svg',
+  '/lubeasy/manifest.json'
 ];
 
 self.addEventListener('install', function(event) {
@@ -20,14 +19,10 @@ self.addEventListener('install', function(event) {
 });
 
 self.addEventListener('fetch', function(event) {
+  // SEMPRE busca da rede primeiro (sem cache)
   event.respondWith(
-    caches.match(event.request).then(function(response) {
-      if (response) {
-        return response;
-      }
-      return fetch(event.request).catch(function() {
-        return caches.match('/LubEasy/index.html');
-      });
+    fetch(event.request).catch(function() {
+      return caches.match(event.request);
     })
   );
 });
