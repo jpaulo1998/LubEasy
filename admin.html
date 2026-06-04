@@ -243,7 +243,7 @@ const db = getFirestore(app);
 let todosRegistros = [];
 
 // ✅ VERIFICAR LOGIN
-if (!sessionStorage.getItem('logado')) {
+if (!sessionStorage.getItem('lubeasy_sessao')) {
   window.location.href = 'login.html';
 }
 
