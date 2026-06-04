@@ -52,11 +52,7 @@ header h1 { font-size:20px; font-weight:800; }
   grid-template-columns:1fr 1fr;
   gap:14px;
 }
-.form-group {
-  display:flex;
-  flex-direction:column;
-  gap:6px;
-}
+.form-group { display:flex; flex-direction:column; gap:6px; }
 .form-group.full { grid-column:1/-1; }
 label { font-size:13px; font-weight:600; color:#444; }
 input, select, textarea {
@@ -103,6 +99,7 @@ textarea { resize:vertical; min-height:80px; }
   transition:opacity 0.3s;
   z-index:999;
   pointer-events:none;
+  white-space:nowrap;
 }
 .toast.show { opacity:1; }
 .toast.erro { background:#c0392b; }
@@ -154,13 +151,7 @@ tr:hover td { background:#f8faff; }
 }
 .btn-del:hover { background:#f5c6c6; }
 .vazio { text-align:center; color:#aaa; padding:32px; font-size:15px; }
-
-.loading {
-  text-align:center;
-  color:#888;
-  padding:24px;
-  font-size:15px;
-}
+.loading { text-align:center; color:#888; padding:24px; font-size:15px; }
 
 @media(max-width:600px) {
   .form-grid { grid-template-columns:1fr; }
@@ -178,7 +169,6 @@ tr:hover td { background:#f8faff; }
 
 <div class="container">
 
-  <!-- FORMULÁRIO -->
   <div class="form-card">
     <h2>➕ Cadastrar Equipamento</h2>
     <div class="form-grid">
@@ -211,13 +201,15 @@ tr:hover td { background:#f8faff; }
         <textarea id="observacoes" placeholder="Ex: Limpar o ponto antes de lubrificar"></textarea>
       </div>
     </div>
-    <button class="btn-salvar" id="btnSalvar" onclick="salvar()">💾 Salvar Equipamento</button>
+    <button class="btn-salvar" id="btnSalvar" onclick="salvar()">
+      💾 Salvar Equipamento
+    </button>
   </div>
 
-  <!-- TABELA -->
   <div class="tabela-card">
     <h2>📋 Equipamentos Cadastrados</h2>
-    <input class="busca" type="text" id="busca" placeholder="🔍 Buscar equipamento..." oninput="filtrar()">
+    <input class="busca" type="text" id="busca"
+      placeholder="🔍 Buscar equipamento..." oninput="filtrar()">
     <div id="tabela-container">
       <div class="loading">⏳ Carregando...</div>
     </div>
@@ -227,11 +219,14 @@ tr:hover td { background:#f8faff; }
 
 <div class="toast" id="toast"></div>
 
-<!-- FIREBASE -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, onSnapshot, orderBy, query } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import {
+  getFirestore, collection, addDoc, deleteDoc,
+  doc, onSnapshot, orderBy, query
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
+// ✅ SUAS CREDENCIAIS FIREBASE
 const firebaseConfig = {
   apiKey: "AIzaSyCLBmCWxiV5n7cNg6NNQVkGKHmMmhY2yDM",
   authDomain: "lubeasy-c75be.firebaseapp.com",
@@ -246,25 +241,28 @@ const db = getFirestore(app);
 
 let todosRegistros = [];
 
-// VERIFICAR LOGIN
+// ✅ VERIFICAR LOGIN
 if (!sessionStorage.getItem('logado')) {
   window.location.href = 'login.html';
 }
 
-// CARREGAR DADOS EM TEMPO REAL
+// ✅ CARREGAR DADOS EM TEMPO REAL
 const q = query(collection(db, "equipamentos"), orderBy("equipamento"));
 onSnapshot(q, (snapshot) => {
   todosRegistros = [];
-  snapshot.forEach((doc) => {
-    todosRegistros.push({ id: doc.id, ...doc.data() });
+  snapshot.forEach((d) => {
+    todosRegistros.push({ id: d.id, ...d.data() });
   });
   renderTabela(todosRegistros);
+}, (error) => {
+  console.error("Erro Firestore:", error);
+  mostrarToast('❌ Erro ao carregar dados!', true);
 });
 
-// SALVAR
+// ✅ SALVAR
 window.salvar = async function() {
-  const equipamento = document.getElementById('equipamento').value.trim();
-  const ponto = document.getElementById('ponto').value.trim();
+  const equipamento  = document.getElementById('equipamento').value.trim();
+  const ponto        = document.getElementById('ponto').value.trim();
   const lubrificante = document.getElementById('lubrificante').value.trim();
 
   if (!equipamento || !ponto || !lubrificante) {
@@ -279,27 +277,26 @@ window.salvar = async function() {
   try {
     await addDoc(collection(db, "equipamentos"), {
       equipamento,
-      fabricante: document.getElementById('fabricante').value.trim(),
+      fabricante:   document.getElementById('fabricante').value.trim(),
       ponto,
       lubrificante,
-      quantidade: document.getElementById('quantidade').value.trim(),
-      frequencia: document.getElementById('frequencia').value.trim(),
-      observacoes: document.getElementById('observacoes').value.trim(),
-      criadoEm: new Date().toISOString()
+      quantidade:   document.getElementById('quantidade').value.trim(),
+      frequencia:   document.getElementById('frequencia').value.trim(),
+      observacoes:  document.getElementById('observacoes').value.trim(),
+      criadoEm:     new Date().toISOString()
     });
-
     mostrarToast('✅ Equipamento salvo com sucesso!');
     limparForm();
-  } catch (e) {
-    mostrarToast('❌ Erro ao salvar!', true);
-    console.error(e);
+  } catch(e) {
+    console.error("Erro ao salvar:", e);
+    mostrarToast('❌ Erro ao salvar: ' + e.message, true);
   }
 
   btn.disabled = false;
   btn.textContent = '💾 Salvar Equipamento';
 }
 
-// DELETAR
+// ✅ DELETAR
 window.deletar = async function(id) {
   if (!confirm('Deseja excluir este equipamento?')) return;
   try {
@@ -310,7 +307,7 @@ window.deletar = async function(id) {
   }
 }
 
-// FILTRAR
+// ✅ FILTRAR
 window.filtrar = function() {
   const termo = document.getElementById('busca').value.toLowerCase();
   const filtrados = todosRegistros.filter(r =>
@@ -321,11 +318,12 @@ window.filtrar = function() {
   renderTabela(filtrados);
 }
 
-// RENDERIZAR TABELA
+// ✅ RENDERIZAR TABELA
 function renderTabela(registros) {
   const container = document.getElementById('tabela-container');
   if (registros.length === 0) {
-    container.innerHTML = '<div class="vazio">📭 Nenhum equipamento encontrado</div>';
+    container.innerHTML =
+      '<div class="vazio">📭 Nenhum equipamento encontrado</div>';
     return;
   }
   container.innerHTML = `
@@ -351,7 +349,11 @@ function renderTabela(registros) {
               <td>${r.lubrificante}</td>
               <td>${r.quantidade || '—'}</td>
               <td>${r.frequencia || '—'}</td>
-              <td><button class="btn-del" onclick="deletar('${r.id}')">🗑️</button></td>
+              <td>
+                <button class="btn-del" onclick="deletar('${r.id}')">
+                  🗑️
+                </button>
+              </td>
             </tr>
           `).join('')}
         </tbody>
@@ -360,21 +362,22 @@ function renderTabela(registros) {
   `;
 }
 
-// LIMPAR FORMULÁRIO
+// ✅ LIMPAR FORMULÁRIO
 function limparForm() {
-  ['equipamento','fabricante','ponto','lubrificante','quantidade','frequencia','observacoes']
+  ['equipamento','fabricante','ponto','lubrificante',
+   'quantidade','frequencia','observacoes']
     .forEach(id => document.getElementById(id).value = '');
 }
 
-// TOAST
+// ✅ TOAST
 function mostrarToast(msg, erro = false) {
   const t = document.getElementById('toast');
   t.textContent = msg;
   t.className = 'toast show' + (erro ? ' erro' : '');
-  setTimeout(() => t.className = 'toast', 3000);
+  setTimeout(() => t.className = 'toast', 3500);
 }
 
-// SAIR
+// ✅ SAIR
 window.sair = function() {
   sessionStorage.removeItem('logado');
   window.location.href = 'login.html';
