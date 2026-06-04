@@ -8,153 +8,159 @@
 <meta name="theme-color" content="#2176c7">
 <style>
 * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI',sans-serif; }
-body { background:#f0f4f8; min-height:100vh; }
-
-header {
+body {
   background: linear-gradient(135deg, #0d2b4e, #1a4f8a);
-  color:#fff;
-  padding:16px 24px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  gap: 20px;
 }
-header h1 { font-size:20px; font-weight:800; }
+header {
+  width: 100%;
+  max-width: 700px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+header h1 {
+  color: #fff;
+  font-size: 22px;
+  font-weight: 800;
+}
 .btn-voltar {
-  background:rgba(255,255,255,0.15);
-  color:#fff;
-  border:none;
-  padding:8px 16px;
-  border-radius:8px;
-  cursor:pointer;
-  font-size:14px;
-  font-weight:600;
-  text-decoration:none;
+  background: rgba(255,255,255,0.15);
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
 }
-
-.container { max-width:960px; margin:0 auto; padding:24px 16px; }
+.btn-voltar:hover { background: rgba(255,255,255,0.25); }
 
 .busca-card {
-  background:#fff;
-  border-radius:16px;
-  padding:20px 24px;
-  box-shadow:0 2px 12px rgba(0,0,0,0.08);
-  margin-bottom:24px;
+  background: #fff;
+  border-radius: 16px;
+  padding: 20px;
+  width: 100%;
+  max-width: 700px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.15);
 }
-.busca-card input {
-  width:100%;
-  padding:12px 16px;
-  border:1.5px solid #ddd;
-  border-radius:10px;
-  font-size:15px;
-  outline:none;
+.busca-input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #ddd;
+  border-radius: 10px;
+  font-size: 15px;
+  outline: none;
+  color: #333;
 }
-.busca-card input:focus { border-color:#2176c7; }
+.busca-input:focus { border-color: #2176c7; }
 
-.resultado-card {
-  background:#fff;
-  border-radius:16px;
-  padding:24px;
-  box-shadow:0 2px 12px rgba(0,0,0,0.08);
-}
-.resultado-card h2 {
-  font-size:18px;
-  color:#0d2b4e;
-  margin-bottom:16px;
-  font-weight:700;
+.resultados {
+  width: 100%;
+  max-width: 700px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
 }
 
-.cards-grid {
-  display:grid;
-  grid-template-columns:repeat(auto-fill, minmax(280px, 1fr));
-  gap:16px;
+.card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.12);
+}
+.card-titulo {
+  font-size: 17px;
+  font-weight: 700;
+  color: #0d2b4e;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.card-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.card-item label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #888;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 2px;
+}
+.card-item span {
+  font-size: 14px;
+  color: #222;
+  font-weight: 500;
+}
+.card-obs {
+  margin-top: 10px;
+  padding: 10px;
+  background: #f0f4f8;
+  border-radius: 8px;
+  font-size: 13px;
+  color: #555;
 }
 
-.equip-card {
-  background:#f8faff;
-  border:1.5px solid #e0e8f5;
-  border-radius:12px;
-  padding:18px;
-  display:flex;
-  flex-direction:column;
-  gap:8px;
-}
-.equip-card h3 {
-  font-size:16px;
-  color:#0d2b4e;
-  font-weight:700;
-}
-.equip-card .badge {
-  display:inline-block;
-  background:#e8f0fe;
-  color:#2176c7;
-  padding:3px 10px;
-  border-radius:20px;
-  font-size:12px;
-  font-weight:600;
-  width:fit-content;
-}
-.equip-card .linha {
-  display:flex;
-  gap:8px;
-  font-size:13px;
-  color:#555;
-  align-items:flex-start;
-}
-.equip-card .linha strong {
-  color:#333;
-  min-width:90px;
-  font-weight:600;
-}
 .vazio {
-  text-align:center;
-  color:#aaa;
-  padding:40px;
-  font-size:15px;
+  background: #fff;
+  border-radius: 16px;
+  padding: 40px;
+  text-align: center;
+  color: #aaa;
+  font-size: 15px;
+  width: 100%;
+  max-width: 700px;
 }
 .loading {
-  text-align:center;
-  color:#888;
-  padding:32px;
-  font-size:15px;
-}
-.contador {
-  font-size:13px;
-  color:#888;
-  margin-bottom:16px;
+  color: #fff;
+  font-size: 16px;
+  padding: 20px;
+  text-align: center;
 }
 
-@media(max-width:560px) {
-  .cards-grid { grid-template-columns:1fr; }
+footer {
+  color: rgba(255,255,255,0.4);
+  font-size: 12px;
+  text-align: center;
+  padding-bottom: 10px;
 }
 </style>
 </head>
 <body>
 
 <header>
-  <h1>🔍 LubEasy — Consulta</h1>
-  <a href="index.html" class="btn-voltar">🏠 Início</a>
+  <h1>🛢️ LubEasy</h1>
+  <a class="btn-voltar" href="index.html">← Voltar</a>
 </header>
 
-<div class="container">
-
-  <div class="busca-card">
-    <input type="text" id="busca" placeholder="🔍 Buscar por equipamento, ponto ou lubrificante..." oninput="filtrar()">
-  </div>
-
-  <div class="resultado-card">
-    <h2>📋 Equipamentos</h2>
-    <div class="contador" id="contador"></div>
-    <div id="resultado">
-      <div class="loading">⏳ Carregando equipamentos...</div>
-    </div>
-  </div>
-
+<div class="busca-card">
+  <input class="busca-input" type="text" id="busca"
+    placeholder="🔍 Buscar equipamento, ponto ou lubrificante..."
+    oninput="filtrar()">
 </div>
 
-<!-- FIREBASE -->
+<div class="resultados" id="resultados">
+  <div class="loading">⏳ Carregando equipamentos...</div>
+</div>
+
+<footer>© 2026 LubEasy</footer>
+
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, onSnapshot, orderBy, query } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { initializeApp } from
+  "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import {
+  getFirestore, collection, onSnapshot, orderBy, query
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCLBmCWxiV5n7cNg6NNQVkGKHmMmhY2yDM",
@@ -170,55 +176,75 @@ const db = getFirestore(app);
 
 let todosRegistros = [];
 
-// CARREGAR DADOS EM TEMPO REAL
+// ✅ CARREGAR DADOS EM TEMPO REAL
 const q = query(collection(db, "equipamentos"), orderBy("equipamento"));
 onSnapshot(q, (snapshot) => {
   todosRegistros = [];
-  snapshot.forEach((doc) => {
-    todosRegistros.push({ id: doc.id, ...doc.data() });
+  snapshot.forEach((d) => {
+    todosRegistros.push({ id: d.id, ...d.data() });
   });
-  renderCards(todosRegistros);
+  filtrar();
+}, (error) => {
+  console.error("Erro:", error);
+  document.getElementById('resultados').innerHTML =
+    '<div class="vazio">❌ Erro ao carregar dados!</div>';
 });
 
-// FILTRAR
+// ✅ FILTRAR
 window.filtrar = function() {
   const termo = document.getElementById('busca').value.toLowerCase();
-  const filtrados = todosRegistros.filter(r =>
-    r.equipamento.toLowerCase().includes(termo) ||
-    (r.ponto && r.ponto.toLowerCase().includes(termo)) ||
-    (r.lubrificante && r.lubrificante.toLowerCase().includes(termo)) ||
-    (r.fabricante && r.fabricante.toLowerCase().includes(termo))
-  );
+  const filtrados = termo
+    ? todosRegistros.filter(r =>
+        r.equipamento.toLowerCase().includes(termo) ||
+        (r.ponto && r.ponto.toLowerCase().includes(termo)) ||
+        (r.lubrificante && r.lubrificante.toLowerCase().includes(termo)) ||
+        (r.fabricante && r.fabricante.toLowerCase().includes(termo))
+      )
+    : todosRegistros;
   renderCards(filtrados);
 }
 
-// RENDERIZAR CARDS
+// ✅ RENDERIZAR CARDS
 function renderCards(registros) {
-  const container = document.getElementById('resultado');
-  const contador = document.getElementById('contador');
-
-  contador.textContent = `${registros.length} equipamento(s) encontrado(s)`;
+  const container = document.getElementById('resultados');
 
   if (registros.length === 0) {
-    container.innerHTML = '<div class="vazio">📭 Nenhum equipamento encontrado</div>';
+    container.innerHTML =
+      '<div class="vazio">📭 Nenhum equipamento encontrado</div>';
     return;
   }
 
-  container.innerHTML = `
-    <div class="cards-grid">
-      ${registros.map(r => `
-        <div class="equip-card">
-          <h3>⚙️ ${r.equipamento}</h3>
-          ${r.fabricante ? `<span class="badge">🏭 ${r.fabricante}</span>` : ''}
-          <div class="linha"><strong>📍 Ponto:</strong> ${r.ponto}</div>
-          <div class="linha"><strong>🛢️ Lubrificante:</strong> ${r.lubrificante}</div>
-          ${r.quantidade ? `<div class="linha"><strong>⚖️ Quantidade:</strong> ${r.quantidade}</div>` : ''}
-          ${r.frequencia ? `<div class="linha"><strong>🗓️ Frequência:</strong> ${r.frequencia}</div>` : ''}
-          ${r.observacoes ? `<div class="linha"><strong>📝 Obs:</strong> ${r.observacoes}</div>` : ''}
+  container.innerHTML = registros.map(r => `
+    <div class="card">
+      <div class="card-titulo">
+        🔧 ${r.equipamento}
+        ${r.fabricante ? `<span style="font-size:13px;color:#888;font-weight:400">
+          — ${r.fabricante}</span>` : ''}
+      </div>
+      <div class="card-grid">
+        <div class="card-item">
+          <label>📍 Ponto</label>
+          <span>${r.ponto || '—'}</span>
         </div>
-      `).join('')}
+        <div class="card-item">
+          <label>🛢️ Lubrificante</label>
+          <span>${r.lubrificante || '—'}</span>
+        </div>
+        <div class="card-item">
+          <label>⚖️ Quantidade</label>
+          <span>${r.quantidade || '—'}</span>
+        </div>
+        <div class="card-item">
+          <label>📅 Frequência</label>
+          <span>${r.frequencia || '—'}</span>
+        </div>
+      </div>
+      ${r.observacoes ? `
+        <div class="card-obs">
+          📝 ${r.observacoes}
+        </div>` : ''}
     </div>
-  `;
+  `).join('');
 }
 </script>
 
