@@ -32,7 +32,7 @@ header h1 { font-size:20px; font-weight:800; }
 }
 .btn-sair:hover { background:rgba(255,255,255,0.25); }
 
-.container { max-width:900px; margin:0 auto; padding:24px 16px; }
+.container { max-width:960px; margin:0 auto; padding:24px 16px; }
 
 .form-card {
   background:#fff;
@@ -68,9 +68,13 @@ input, textarea {
 input:focus, textarea:focus { border-color:#2176c7; }
 textarea { resize:vertical; min-height:80px; }
 
-.btn-salvar {
+.btn-row {
+  display:flex;
+  gap:12px;
   margin-top:20px;
-  width:100%;
+}
+.btn-salvar {
+  flex:1;
   padding:14px;
   background:#2176c7;
   color:#fff;
@@ -83,6 +87,25 @@ textarea { resize:vertical; min-height:80px; }
 }
 .btn-salvar:hover { background:#1a5fa0; }
 .btn-salvar:disabled { background:#aaa; cursor:not-allowed; }
+.btn-cancelar {
+  padding:14px 24px;
+  background:#f0f4f8;
+  color:#555;
+  border:none;
+  border-radius:10px;
+  font-size:15px;
+  font-weight:600;
+  cursor:pointer;
+  display:none;
+}
+.btn-cancelar:hover { background:#e0e8f0; }
+
+.modo-edicao .form-card {
+  border: 2px solid #f39c12;
+}
+.modo-edicao .form-card h2 {
+  color: #f39c12;
+}
 
 .toast {
   position:fixed;
@@ -103,6 +126,7 @@ textarea { resize:vertical; min-height:80px; }
 }
 .toast.show { opacity:1; }
 .toast.erro { background:#c0392b; }
+.toast.aviso { background:#f39c12; }
 
 .tabela-card {
   background:#fff;
@@ -116,16 +140,48 @@ textarea { resize:vertical; min-height:80px; }
   margin-bottom:16px;
   font-weight:700;
 }
+
+.filtros {
+  display:flex;
+  gap:12px;
+  margin-bottom:16px;
+  flex-wrap:wrap;
+}
 .busca {
-  width:100%;
+  flex:1;
+  min-width:200px;
   padding:10px 14px;
   border:1.5px solid #ddd;
   border-radius:8px;
   font-size:14px;
-  margin-bottom:16px;
   outline:none;
 }
 .busca:focus { border-color:#2176c7; }
+
+select.filtro-equip {
+  padding:10px 14px;
+  border:1.5px solid #ddd;
+  border-radius:8px;
+  font-size:14px;
+  outline:none;
+  color:#333;
+  background:#fff;
+  cursor:pointer;
+  min-width:200px;
+}
+select.filtro-equip:focus { border-color:#2176c7; }
+
+.badge-total {
+  background:#f0f4f8;
+  color:#0d2b4e;
+  padding:6px 14px;
+  border-radius:20px;
+  font-size:13px;
+  font-weight:600;
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
 
 table { width:100%; border-collapse:collapse; font-size:14px; }
 th {
@@ -137,8 +193,21 @@ th {
 }
 th:first-child { border-radius:8px 0 0 0; }
 th:last-child { border-radius:0 8px 0 0; }
-td { padding:11px 10px; border-bottom:1px solid #f0f0f0; color:#333; }
+td { padding:11px 10px; border-bottom:1px solid #f0f0f0; color:#333; vertical-align:middle; }
 tr:hover td { background:#f8faff; }
+
+.acoes { display:flex; gap:6px; }
+.btn-edit {
+  background:#eaf4ff;
+  color:#2176c7;
+  border:none;
+  padding:6px 12px;
+  border-radius:6px;
+  cursor:pointer;
+  font-size:13px;
+  font-weight:600;
+}
+.btn-edit:hover { background:#c8e3ff; }
 .btn-del {
   background:#fdecea;
   color:#c0392b;
@@ -150,6 +219,7 @@ tr:hover td { background:#f8faff; }
   font-weight:600;
 }
 .btn-del:hover { background:#f5c6c6; }
+
 .vazio { text-align:center; color:#aaa; padding:32px; font-size:15px; }
 .loading { text-align:center; color:#888; padding:24px; font-size:15px; }
 
@@ -157,6 +227,8 @@ tr:hover td { background:#f8faff; }
   .form-grid { grid-template-columns:1fr; }
   table { font-size:12px; }
   th, td { padding:8px 6px; }
+  .filtros { flex-direction:column; }
+  select.filtro-equip { min-width:100%; }
 }
 </style>
 </head>
@@ -167,10 +239,11 @@ tr:hover td { background:#f8faff; }
   <button class="btn-sair" onclick="sair()">🚪 Sair</button>
 </header>
 
-<div class="container">
+<div class="container" id="container">
 
+  <!-- FORMULÁRIO -->
   <div class="form-card">
-    <h2>➕ Cadastrar Equipamento</h2>
+    <h2 id="form-titulo">➕ Cadastrar Equipamento</h2>
     <div class="form-grid">
       <div class="form-group">
         <label>Equipamento *</label>
@@ -202,17 +275,35 @@ tr:hover td { background:#f8faff; }
           placeholder="Ex: Limpar o ponto antes de lubrificar"></textarea>
       </div>
     </div>
-    <button class="btn-salvar" id="btnSalvar" onclick="salvar()">
-      💾 Salvar Equipamento
-    </button>
+    <div class="btn-row">
+      <button class="btn-salvar" id="btnSalvar" onclick="salvar()">
+        💾 Salvar Equipamento
+      </button>
+      <button class="btn-cancelar" id="btnCancelar" onclick="cancelarEdicao()">
+        ✖ Cancelar
+      </button>
+    </div>
   </div>
 
+  <!-- TABELA -->
   <div class="tabela-card">
     <h2>📋 Equipamentos Cadastrados</h2>
-    <input class="busca" type="text" id="busca"
-      placeholder="🔍 Buscar equipamento..." oninput="filtrar()">
-    <div id="tabela-container">
-      <div class="loading">⏳ Carregando...</div>
+
+    <div class="filtros">
+      <input class="busca" type="text" id="busca"
+        placeholder="🔍 Buscar..." oninput="filtrar()">
+      <select class="filtro-equip" id="filtro-equip" onchange="filtrar()">
+        <option value="">🏭 Todos os equipamentos</option>
+      </select>
+      <div class="badge-total">
+        📦 <span id="total">0</span> registros
+      </div>
+    </div>
+
+    <div style="overflow-x:auto">
+      <div id="tabela-container">
+        <div class="loading">⏳ Carregando...</div>
+      </div>
     </div>
   </div>
 
@@ -225,7 +316,7 @@ import { initializeApp } from
   "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import {
   getFirestore, collection, addDoc, deleteDoc,
-  doc, onSnapshot, orderBy, query
+  doc, onSnapshot, orderBy, query, updateDoc
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -241,6 +332,7 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 let todosRegistros = [];
+let idEditando = null;
 
 // ✅ VERIFICAR LOGIN
 if (!sessionStorage.getItem('lubeasy_sessao')) {
@@ -254,20 +346,67 @@ onSnapshot(q, (snapshot) => {
   snapshot.forEach((d) => {
     todosRegistros.push({ id: d.id, ...d.data() });
   });
-  renderTabela(todosRegistros);
+  atualizarFiltroEquip();
+  filtrar();
 }, (error) => {
   console.error("Erro Firestore:", error);
   mostrarToast('❌ Erro ao carregar dados!', true);
 });
 
-// ✅ SALVAR
+// ✅ ATUALIZAR DROPDOWN DE EQUIPAMENTOS
+function atualizarFiltroEquip() {
+  const select = document.getElementById('filtro-equip');
+  const valorAtual = select.value;
+
+  // Pega equipamentos únicos
+  const equipamentos = [...new Set(
+    todosRegistros.map(r => r.equipamento)
+  )].sort();
+
+  select.innerHTML = '<option value="">🏭 Todos os equipamentos</option>';
+  equipamentos.forEach(eq => {
+    const opt = document.createElement('option');
+    opt.value = eq;
+    opt.textContent = eq;
+    if (eq === valorAtual) opt.selected = true;
+    select.appendChild(opt);
+  });
+}
+
+// ✅ FILTRAR
+window.filtrar = function() {
+  const termo = document.getElementById('busca').value.toLowerCase();
+  const equipSelecionado = document.getElementById('filtro-equip').value;
+
+  let filtrados = todosRegistros;
+
+  // Filtro por equipamento
+  if (equipSelecionado) {
+    filtrados = filtrados.filter(r => r.equipamento === equipSelecionado);
+  }
+
+  // Filtro por busca
+  if (termo) {
+    filtrados = filtrados.filter(r =>
+      r.equipamento.toLowerCase().includes(termo) ||
+      (r.ponto && r.ponto.toLowerCase().includes(termo)) ||
+      (r.lubrificante && r.lubrificante.toLowerCase().includes(termo)) ||
+      (r.fabricante && r.fabricante.toLowerCase().includes(termo))
+    );
+  }
+
+  document.getElementById('total').textContent = filtrados.length;
+  renderTabela(filtrados);
+}
+
+// ✅ SALVAR OU EDITAR
 window.salvar = async function() {
   const equipamento  = document.getElementById('equipamento').value.trim();
   const ponto        = document.getElementById('ponto').value.trim();
   const lubrificante = document.getElementById('lubrificante').value.trim();
 
   if (!equipamento || !ponto || !lubrificante) {
-    mostrarToast('⚠️ Preencha os campos obrigatórios!', true);
+    mostrarToast('⚠️ Preencha os campos obrigatórios!', false, true);
     return;
   }
 
@@ -275,26 +414,74 @@ window.salvar = async function() {
   btn.disabled = true;
   btn.textContent = '⏳ Salvando...';
 
+  const dados = {
+    equipamento,
+    fabricante:  document.getElementById('fabricante').value.trim(),
+    ponto,
+    lubrificante,
+    quantidade:  document.getElementById('quantidade').value.trim(),
+    frequencia:  document.getElementById('frequencia').value.trim(),
+    observacoes: document.getElementById('observacoes').value.trim(),
+  };
+
   try {
-    await addDoc(collection(db, "equipamentos"), {
-      equipamento,
-      fabricante:  document.getElementById('fabricante').value.trim(),
-      ponto,
-      lubrificante,
-      quantidade:  document.getElementById('quantidade').value.trim(),
-      frequencia:  document.getElementById('frequencia').value.trim(),
-      observacoes: document.getElementById('observacoes').value.trim(),
-      criadoEm:    new Date().toISOString()
-    });
-    mostrarToast('✅ Equipamento salvo com sucesso!');
-    limparForm();
+    if (idEditando) {
+      // ✅ MODO EDIÇÃO
+      await updateDoc(doc(db, "equipamentos", idEditando), dados);
+      mostrarToast('✏️ Registro atualizado com sucesso!');
+      cancelarEdicao();
+    } else {
+      // ✅ MODO CADASTRO
+      dados.criadoEm = new Date().toISOString();
+      await addDoc(collection(db, "equipamentos"), dados);
+      mostrarToast('✅ Equipamento salvo com sucesso!');
+      limparForm();
+    }
   } catch(e) {
     console.error("Erro ao salvar:", e);
     mostrarToast('❌ Erro: ' + e.message, true);
   }
 
   btn.disabled = false;
-  btn.textContent = '💾 Salvar Equipamento';
+  btn.textContent = idEditando ? '💾 Atualizar' : '💾 Salvar Equipamento';
+}
+
+// ✅ EDITAR
+window.editar = function(id) {
+  const r = todosRegistros.find(x => x.id === id);
+  if (!r) return;
+
+  idEditando = id;
+
+  // Preenche o formulário
+  document.getElementById('equipamento').value = r.equipamento || '';
+  document.getElementById('fabricante').value  = r.fabricante  || '';
+  document.getElementById('ponto').value        = r.ponto       || '';
+  document.getElementById('lubrificante').value = r.lubrificante|| '';
+  document.getElementById('quantidade').value   = r.quantidade  || '';
+  document.getElementById('frequencia').value   = r.frequencia  || '';
+  document.getElementById('observacoes').value  = r.observacoes || '';
+
+  // Muda visual do formulário
+  document.getElementById('form-titulo').textContent = '✏️ Editando Registro';
+  document.getElementById('btnSalvar').textContent = '💾 Atualizar';
+  document.getElementById('btnCancelar').style.display = 'block';
+  document.getElementById('container').classList.add('modo-edicao');
+
+  // Scroll para o topo
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  mostrarToast('✏️ Modo edição ativado!', false, true);
+}
+
+// ✅ CANCELAR EDIÇÃO
+window.cancelarEdicao = function() {
+  idEditando = null;
+  limparForm();
+  document.getElementById('form-titulo').textContent = '➕ Cadastrar Equipamento';
+  document.getElementById('btnSalvar').textContent = '💾 Salvar Equipamento';
+  document.getElementById('btnCancelar').style.display = 'none';
+  document.getElementById('container').classList.remove('modo-edicao');
 }
 
 // ✅ DELETAR
@@ -308,17 +495,6 @@ window.deletar = async function(id) {
   }
 }
 
-// ✅ FILTRAR
-window.filtrar = function() {
-  const termo = document.getElementById('busca').value.toLowerCase();
-  const filtrados = todosRegistros.filter(r =>
-    r.equipamento.toLowerCase().includes(termo) ||
-    (r.ponto && r.ponto.toLowerCase().includes(termo)) ||
-    (r.lubrificante && r.lubrificante.toLowerCase().includes(termo))
-  );
-  renderTabela(filtrados);
-}
-
 // ✅ RENDERIZAR TABELA
 function renderTabela(registros) {
   const container = document.getElementById('tabela-container');
@@ -328,38 +504,41 @@ function renderTabela(registros) {
     return;
   }
   container.innerHTML = `
-    <div style="overflow-x:auto">
-      <table>
-        <thead>
+    <table>
+      <thead>
+        <tr>
+          <th>Equipamento</th>
+          <th>Fabricante</th>
+          <th>Ponto</th>
+          <th>Lubrificante</th>
+          <th>Qtd</th>
+          <th>Frequência</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${registros.map(r => `
           <tr>
-            <th>Equipamento</th>
-            <th>Fabricante</th>
-            <th>Ponto</th>
-            <th>Lubrificante</th>
-            <th>Qtd</th>
-            <th>Frequência</th>
-            <th>Ação</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${registros.map(r => `
-            <tr>
-              <td>${r.equipamento}</td>
-              <td>${r.fabricante || '—'}</td>
-              <td>${r.ponto}</td>
-              <td>${r.lubrificante}</td>
-              <td>${r.quantidade || '—'}</td>
-              <td>${r.frequencia || '—'}</td>
-              <td>
+            <td><strong>${r.equipamento}</strong></td>
+            <td>${r.fabricante || '—'}</td>
+            <td>${r.ponto}</td>
+            <td>${r.lubrificante}</td>
+            <td>${r.quantidade || '—'}</td>
+            <td>${r.frequencia || '—'}</td>
+            <td>
+              <div class="acoes">
+                <button class="btn-edit" onclick="editar('${r.id}')">
+                  ✏️ Editar
+                </button>
                 <button class="btn-del" onclick="deletar('${r.id}')">
                   🗑️
                 </button>
-              </td>
-            </tr>
-          `).join('')}
-        </tbody>
-      </table>
-    </div>
+              </div>
+            </td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>
   `;
 }
 
@@ -371,16 +550,18 @@ function limparForm() {
 }
 
 // ✅ TOAST
-function mostrarToast(msg, erro = false) {
+function mostrarToast(msg, erro = false, aviso = false) {
   const t = document.getElementById('toast');
   t.textContent = msg;
-  t.className = 'toast show' + (erro ? ' erro' : '');
+  t.className = 'toast show' +
+    (erro ? ' erro' : '') +
+    (aviso ? ' aviso' : '');
   setTimeout(() => t.className = 'toast', 3500);
 }
 
 // ✅ SAIR
 window.sair = function() {
-  sessionStorage.removeItem('logado');
+  sessionStorage.removeItem('lubeasy_sessao');
   window.location.href = 'login.html';
 }
 </script>
